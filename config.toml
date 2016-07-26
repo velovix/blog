@@ -1,0 +1,7 @@
+contentdir = "content"
+layoutdir = "layouts"
+publishdir = "public"
+baseurl = "http://velovix.com/"
+languageCode = "en-us"
+title = "velovix"
+canonifyurls = true
