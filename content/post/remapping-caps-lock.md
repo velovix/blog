@@ -19,7 +19,7 @@ effortlessly, like a skilled pianist.  It felt like this was the way keyboards
 were meant to be laid out. As it turned out, at one point, they were laid out
 that way.
 
-![ADM3A Keyboard]("/adm3a-keyboard.jpg")
+![ADM3A Keyboard](/adm3a-keyboard.jpg)
 
 This seems to lend further credence to the idea that the CTRL as Caps Lock
 layout is the way to go. So, why didn't I keep it?
