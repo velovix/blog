@@ -1,7 +1,12 @@
 contentdir = "content"
 layoutdir = "layouts"
 publishdir = "public"
-baseurl = "http://velovix.com/"
+
+baseurl = "https://velovix.github.io/"
 languageCode = "en-us"
 title = "velovix"
 canonifyurls = true
+
+[author]
+	name = "Tyler Compton"
+	github = "velovix"

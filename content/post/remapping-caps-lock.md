@@ -11,7 +11,7 @@ Caps Lock to the CTRL key, which can make executing common chords like CTRL+S
 easier on the hands. In this post I describe my experience with the Caps Lock
 to CTRL mapping and why I ended up switching back.
 
-##The Good
+## The Good
 
 When I first mapped Caps Lock to CTRL, it felt so freeing. Chords that normally
 required me to move my hand down or strain my wrist I could pull off
@@ -24,7 +24,7 @@ that way.
 This seems to lend further credence to the idea that the CTRL as Caps Lock
 layout is the way to go. So, why didn't I keep it?
 
-##Home Row Typing
+## Home Row Typing
 
 The reason why Caps Lock as CTRL feels so good initially is because of how
 little you need to move your hand in order to hit CTRL. You get to keep your
@@ -40,7 +40,7 @@ allows for easy access of just about every key on the left side of the keyboard
 (save for maybe 'q') and your right hand naturally makes up the difference.
 This just feels a lot more natural to me.
 
-##Tab Controls
+## Tab Controls
 
 Most any program with tabs have you move through them using the CTRL+Tab and
 CTRL+Shift+Tab chords. Browsers are the biggest culprits here. Try pressing
@@ -55,7 +55,7 @@ addition to Caps Lock, but that's such a waste having two keys so close
 together do the exact same thing. You can do a lot with those buttons which
 I'll discuss in my final point.
 
-##Pinky Strain
+## Pinky Strain
 
 [This article](http://ergoemacs.org/emacs/swap_CapsLock_Ctrl.html) was the
 first article I saw that made me challenge Caps Lock as CTRL. I actually don't
@@ -75,7 +75,7 @@ Personally, I mapped CTRL+W to Leader+W, where my leader is space bar. That
 lessened my dependence on CTRL significantly and I could see an immediate
 difference.
 
-##Better Options
+## Better Options
 
 As I mentioned earlier, having to map both CTRL and Caps Lock to the same
 functionality is a real shame considering the potential it squanders. For me, I
