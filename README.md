@@ -1,2 +1,3 @@
-# velovix.github.io
-Just domain squatting for now. More yet to come.
+# blog
+
+Source code for my blog, which is a static site that can be generated using Hugo.
