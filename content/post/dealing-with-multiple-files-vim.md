@@ -1,6 +1,6 @@
 +++
 date = "2016-07-28T14:05:00-07:00"
-draft = true
+draft = false
 title = "Dealing With Multiple Files in VIM"
 +++
 
