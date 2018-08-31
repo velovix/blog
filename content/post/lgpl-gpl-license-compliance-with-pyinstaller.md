@@ -39,7 +39,7 @@ You can use `pip` to inspect your transitive dependencies using `pip show`.
 In the following example, I'm taking a look at the dependencies of the `falcon`
 package.
 
-```
+```bash
 pip show falcon
 ```
 
@@ -79,7 +79,7 @@ in question.
 
 Start by running your program like normal.
 
-```
+```bash
 ./MyCoolExecutable
 ```
 
@@ -146,7 +146,7 @@ object files that PyInstaller will put in your resulting executable. We may
 simply filter out the libraries we don't want to include from this list. The
 result might look something like this.
 
-```
+```python
 # -*- mode: python -*-
 
 analysis = Analysis(['./my_main_file.py'],
@@ -281,7 +281,7 @@ modified version into a shared library file and replace the one included in the
 deployment. We can accomplish this in much the same way we did when excluding
 GPL dependencies. Let's see how that might look.
 
-```
+```python
 # -*- mode: python -*-
 from shutil import copyfile
 from pathlib import Path
@@ -352,7 +352,7 @@ ways to accomplish this, but we opted to deploy a script alongside the
 executable that modifies the `LD_LIBRARY_PATH` variable to include the `lib`
 directory.
 
-```
+```bash
 #!/usr/bin/env bash
 
 LD_LIBRARY_PATH=./lib:$LD_LIBRARY_PATH ./MyCoolExecutable
@@ -380,11 +380,11 @@ a bit like the regular old `PATH` variable from Bash. They're all simply lists
 of paths that instruct a program on where to look for something.
 
 By default, the first entry in `sys.path` points to the same directory as the
-Python script that you're running. The other entires depend on your
-installation and environment. One of the entires will point to the location of
+Python script that you're running. The other entries depend on your
+installation and environment. One of the entries will point to the location of
 the standard library, for instance. If you're running in a virtual environment,
 there will be entries pointing to where in that virtual environment your
-dependences are stored. Basically, if you have a Python package installed
+dependencies are stored. Basically, if you have a Python package installed
 somewhere and you are able to import it, it's likely because there's a
 `sys.path` entry pointing to that location.
 
@@ -503,6 +503,6 @@ any easier. However, we've demonstrated that it's still possible with enough
 diligence and some knowledge about PyInstaller's inner workings.
 
 [sys.path docs]: https://docs.python.org/3/library/sys.html#sys.path
-[pyinstaller bootstrapping docs]: https://pyinstaller.readthedocs.io/en/v3.3.1/advanced-topics.html#the-bootstrap-process-in-detail
+[pyinstaller bootstrapping docs]: https://pyinstaller.readthedocs.io/en/v3.3.1/advanced-topics.html#python-imports-in-a-bundled-app
 [SourceFileLoader docs]: https://docs.python.org/3/library/importlib.html#importlib.machinery.SourceFileLoader
 [ModuleSpec docs]: https://docs.python.org/3/library/importlib.html#importlib.machinery.ModuleSpec
