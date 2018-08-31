@@ -1,7 +1,7 @@
 ---
 title: "LGPL and GPL License Compliance with PyInstaller"
-date: 2018-08-16T19:57:12-07:00
-draft: true
+date: 2018-08-31T19:57:12-07:00
+draft: false
 ---
 
 PyInstaller is a piece of software that attempts to bundle up a Python
