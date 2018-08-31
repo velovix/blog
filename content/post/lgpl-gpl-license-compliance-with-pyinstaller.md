@@ -504,5 +504,5 @@ diligence and some knowledge about PyInstaller's inner workings.
 
 [sys.path docs]: https://docs.python.org/3/library/sys.html#sys.path
 [pyinstaller bootstrapping docs]: https://pyinstaller.readthedocs.io/en/v3.3.1/advanced-topics.html#the-bootstrap-process-in-detail
-[SourceFileLoader docs][https://docs.python.org/3/library/importlib.html#importlib.machinery.SourceFileLoader]
-[ModuleSpec docs][https://docs.python.org/3/library/importlib.html#importlib.machinery.ModuleSpec]
+[SourceFileLoader docs]: https://docs.python.org/3/library/importlib.html#importlib.machinery.SourceFileLoader
+[ModuleSpec docs]: https://docs.python.org/3/library/importlib.html#importlib.machinery.ModuleSpec
