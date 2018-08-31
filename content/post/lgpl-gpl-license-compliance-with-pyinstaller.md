@@ -97,12 +97,12 @@ that are GPL or LGPL licensed.
 
 # GPL Licensing
 
-If your product is not GPL licensed, you will not be able to use a GPL licensed
-library. Any code that is licensed with GPL must be removed from your executable
-before deployment and you will not be able to link to an external GPL library,
-either. It should be easy to avoid GPL Python libraries by simply removing any
-libraries that use GPL code from your environment with `pip`. C/C++ libraries
-are not always so straightforward.
+If your product is not using a GPL-compatible license, you will not be able to
+use a GPL licensed library. Any code that is licensed with GPL must be removed
+from your executable before deployment and you will not be able to link to an
+external GPL library, either. It should be easy to avoid GPL Python libraries
+by simply removing any libraries that use GPL code from your environment with
+`pip`. C/C++ libraries are not always so straightforward.
 
 Despite our best efforts to not rely on any GPL software, PyInstaller still
 managed to find and include a couple GPL C/C++ libraries in the executable. To
