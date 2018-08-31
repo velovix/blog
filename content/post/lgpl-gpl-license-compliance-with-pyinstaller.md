@@ -53,7 +53,7 @@ Home-page: http://falconframework.org
 Author: Kurt Griffiths
 Author-email: mail@kgriffs.com
 License: Apache 2.0
-Location: /home/velovix/.virtualenvs/brainframe_v0.7.0/lib/python3.6/site-packages
+Location: /home/velovix/.virtualenvs/test/lib/python3.6/site-packages
 Requires: six, python-mimeparse
 Required-by:
 ```
