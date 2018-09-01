@@ -1,8 +1,8 @@
-+++
-date = "2016-06-24T20:49:33-07:00"
-draft = false
-title = "Remapping Caps Lock"
-+++
+---
+title: "Remapping Caps Lock"
+date: "2016-06-24T20:49:33-07:00"
+draft: false
+---
 
 For me and many others, Caps Lock does little more than collect dust on the
 keyboard. These days, it seems pretty archaic to have a dedicated key for such

@@ -1,7 +1,8 @@
-+++ date = "2017-02-01T16:48:56-07:00"
-draft = false
-title = "Movement Experimentation in Google Cardboard"
-+++
+---
+title: "Movement Experimentation in Google Cardboard"
+date: "2017-02-01T16:48:56-07:00"
+draft: false
+---
 
 I love how accessible Google Cardboard is. Got a smartphone and [$7][knox v2]?
 You're fully equipped to experience virtual reality in your home.

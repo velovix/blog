@@ -1,13 +1,31 @@
 contentdir = "content"
-layoutdir = "layouts"
 publishdir = "public"
 
 baseurl = "https://velovix.github.io/"
-languageCode = "en-us"
-title = "velovix"
-theme = "nofancy"
 canonifyurls = true
+languageCode = "en-us"
+
+staticDir = ["static_files"]
+
+title = "velovix"
+theme = "natrium"
+pygmentsCodefences = true
+pygmentsStyle = "native"
 
 [author]
 	name = "Tyler Compton"
 	github = "velovix"
+
+[[menu.main]]
+	name = "Github"
+	url = "https://github.com/velovix"
+	weight = -110
+
+[params]
+	description = "Something"
+
+	[params.logo]
+	url = "velovix-avatar.png"
+	width = 50
+	height = 50
+	alt = "Velovix Avatar"

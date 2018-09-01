@@ -321,7 +321,7 @@ for binary in analysis.binaries:
     if is_gpl(filename):
         print("Excluding library:", filename)
     elif is_lgpl(filename):
-        print("Externalizing library:", filename")
+        print("Externalizing library:", filename)
         copyfile(path, Path("lib", filename))
     else:
         filtered_binaries.append(binary)

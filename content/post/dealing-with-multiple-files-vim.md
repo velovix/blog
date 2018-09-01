@@ -1,8 +1,8 @@
-+++
-date = "2016-07-28T14:05:00-07:00"
-draft = false
-title = "Dealing With Multiple Files in VIM"
-+++
+---
+title: "Dealing With Multiple Files in VIM"
+date: "2016-07-28T14:05:00-07:00"
+draft: false
+---
 
 The VIM learning curve is legendarily steep. As if the modal editing wasn't
 tricky enough, a lot of basic editor features that most users take for granted
