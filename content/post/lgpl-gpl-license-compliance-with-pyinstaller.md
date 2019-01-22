@@ -13,10 +13,10 @@ dependencies as well.
 This is great for any Python project that wants that self-contained,
 single-executable experience that compiled languages can offer. It is also very
 useful for proprietary projects that don't want to deploy their code directly
-to a user. However, PyInstaller is a very aggressive packaging tool and pays no
+to users. However, PyInstaller is a very aggressive packaging tool and pays no
 mind to the licenses of the libraries it packages up. This poses a significant
-challenge if your project does not make its source available, because you'll be
-violating the licenses of any of your LGPL or GPL dependencies.
+challenge if your project does not use a GPL-compatible license, because you
+may be violating the licenses of your LGPL or GPL dependencies.
 
 This post will take a look at strategies we have used to identify and either
 externalize or eliminate LGPL and GPL dependencies in a proprietary PyInstaller
@@ -24,7 +24,7 @@ project.
 
 Please note that I am in no way a lawyer and it's the responsibility of each
 company or individual to do their due diligence when it comes to license
-compliance.
+compliance. This is not legal advice.
 
 # Identifying Your Python Dependencies
 
@@ -104,102 +104,82 @@ external GPL library, either. It should be easy to avoid GPL Python libraries
 by simply removing any libraries that use GPL code from your environment with
 `pip`. C/C++ libraries are not always so straightforward.
 
-Despite our best efforts to not rely on any GPL software, PyInstaller still
-managed to find and include a couple GPL C/C++ libraries in the executable. To
-solve this problem, we apply a filter in our `build.spec` to remove these files
-before the executable finishes building. Let's take a look at how.
+If you find a library file that is GPL licensed in your project, you'll need to
+identify where this dependency comes from and remove it. This can be
+straightforward in circumstances where a Python package you're using directly
+depends on a GPL library. If that's not the case, it's likely that the GPL
+library is a _transitive dependency_ of another C/C++ library you depend on.
 
-A simple `build.spec` might look something like this:
+C/C++ library files can declare their dependencies on other library files by
+linking to them. PyInstaller uses this linking information to figure out which
+library files need to be included in the executable. We can inspect this
+linking information by running the `ldd` command on a library file. The
+following command will run `ldd` on every library file in your executable's
+temporary directory. You can then inspect the output of this command to find
+why an offending GPL dependency is being pulled into your build.
 
-```python
-# -*- mode: python -*-
-
-analysis = Analysis(['./my_main_file.py'],
-    binaries=[],
-    datas=[],
-    hiddenimports=[],
-    hookspath=[],
-    runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=None)
-
-pyz = PYZ(analysis.pure, analysis.zipped_data, cipher=None)
-
-elf = EXE(pyz,
-    analysis.scripts,
-    analysis.binaries,
-    analysis.zipfiles,
-    analysis.datas,
-    name='MyCoolExecutable',
-    debug=False,
-    strip=False,
-    upx=True,
-    console=True)
+```bash
+find <your /tmp/_MEIxxxx directory> -type f -name "*.so" -exec echo {} \; -exec ldd {} \; 
 ```
 
-When you create a new `Analysis` object, PyInstaller does the work of
-identifying your dependencies. The `binaries` field is a list of tuples in the
-format `(filename, full_path, type)`. These fields represent all of the shared
-object files that PyInstaller will put in your resulting executable. We may
-simply filter out the libraries we don't want to include from this list. The
-result might look something like this.
+Here is an example of the kind of output this command generates.
 
-```python
-# -*- mode: python -*-
-
-analysis = Analysis(['./my_main_file.py'],
-    binaries=[],
-    datas=[],
-    hiddenimports=[],
-    hookspath=[],
-    runtime_hooks=[],
-    excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=None)
-
-gpl_libraries = ["libgcrypt.so", "libsystemd.so"]
-
-def is_gpl(filename):
-    for gpl_lib in gpl_libraries:
-        if gpl_lib in filename:
-            return True
-
-    return False
-
-filtered_binaries = []
-for binary in analysis.binaries:
-    filename, path, type_ = binary
-
-    if is_gpl(filename):
-        print("Excluding library:", filename)
-    else:
-        filtered_binaries.append(binary)
-
-
-pyz = PYZ(analysis.pure, analysis.zipped_data, cipher=None)
-
-elf = EXE(pyz,
-    analysis.scripts,
-    filtered_binaries,
-    analysis.zipfiles,
-    analysis.datas,
-    name='MyCoolExecutable',
-    debug=False,
-    strip=False,
-    upx=True,
-    console=True)
+```
+...
+./xtables/libip6t_hbh.so
+        linux-vdso.so.1 (0x00007ffe79d56000)
+        libxtables.so.12 => /usr/lib/libxtables.so.12 (0x00007f4683acc000)
+        libc.so.6 => /usr/lib/libc.so.6 (0x00007f4683908000)
+        libdl.so.2 => /usr/lib/libdl.so.2 (0x00007f4683903000)
+        /usr/lib64/ld-linux-x86-64.so.2 (0x00007f4683b1f000)
+./xtables/libip6t_srh.so
+        linux-vdso.so.1 (0x00007fff799ad000)
+        libxtables.so.12 => /usr/lib/libxtables.so.12 (0x00007f4c7e29b000)
+        libc.so.6 => /usr/lib/libc.so.6 (0x00007f4c7e0d7000)
+        libdl.so.2 => /usr/lib/libdl.so.2 (0x00007f4c7e0d2000)
+        /usr/lib64/ld-linux-x86-64.so.2 (0x00007f4c7e2ef000)
+./xtables/libxt_SECMARK.so
+        linux-vdso.so.1 (0x00007ffe7a8c2000)
+        libxtables.so.12 => /usr/lib/libxtables.so.12 (0x00007ff02efb3000)
+        libc.so.6 => /usr/lib/libc.so.6 (0x00007ff02edef000)
+        libdl.so.2 => /usr/lib/libdl.so.2 (0x00007ff02edea000)
+        /usr/lib64/ld-linux-x86-64.so.2 (0x00007ff02f006000)
+...
 ```
 
-In the above example, we keep a list of known GPL libraries and filter out the
-`binaries` field of any libraries that look like them. The resulting filtered
-list is fed to the `EXE` constructor.
+The path to each library file is printed, then every library file it links to
+is printed under it. Searching through this output for the name of the GPL
+library file you've identified should be sufficient to find out where it came
+from.
 
-You're going to want to make sure your executable still works without these
-libraries. In my case, it seems that these libraries were never actually linked
-to at runtime so we were able to avoid using them. Your mileage may vary.
+## GNU Readline
+
+If you're creating a build on Linux, you're very likely to find library files
+for GNU Readline. Readline is a library that provides utilities for interactive
+command line applications and Python provides bindings to GNU Readline by
+default in the standard library. Here's the problem: GNU Readline is GPL
+licensed.
+
+Since Readline is part of the standard library, it will be included regardless
+of if you actually use the bindings. The only option I'm aware of to avoid this
+is to compile the Python interpreter yourself in an environment where the C/C++
+Readline library is not installed. This will create a Python interpreter
+without the readline module available.
+
+```bash
+python3 -c "import readline"
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'readline'
+```
+
+It's worth mentioning that Python's readline bindings do technically support
+linking to editline, a mostly API-compatible alternative to GNU Readline with a
+more permissive license. In fact, Python uses this by default on MacOS where
+GNU Readline is not commonly installed. However, at the time of this writing
+support for editline is really only designed for MacOS and I don't know of a
+way to have the interpreter use editline on Linux. The bright side is that if
+your only target is MacOS, you don't have to worry about this!
 
 # LGPL Licensing
 
@@ -278,8 +258,47 @@ executable and put them into a separate `lib` folder. This folder will be
 deployed alongside the executable. End users who wish to swap out the program's
 LGPL dependencies with their own modified version may simply compile the
 modified version into a shared library file and replace the one included in the
-deployment. We can accomplish this in much the same way we did when excluding
-GPL dependencies. Let's see how that might look.
+deployment. We can accomplish this by hooking into PyInstaller's library
+inclusion system.
+
+As you probably already know, we can instruct PyInstaller on how we want our
+application built by pointing it to a `.spec` file. A simple `build.spec` might
+look something like this:
+
+```python
+# -*- mode: python -*-
+
+analysis = Analysis(['./my_main_file.py'],
+    binaries=[],
+    datas=[],
+    hiddenimports=[],
+    hookspath=[],
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=None)
+
+pyz = PYZ(analysis.pure, analysis.zipped_data, cipher=None)
+
+elf = EXE(pyz,
+    analysis.scripts,
+    analysis.binaries,
+    analysis.zipfiles,
+    analysis.datas,
+    name='MyCoolExecutable',
+    debug=False,
+    strip=False,
+    upx=True,
+    console=True)
+```
+
+When you create a new `Analysis` object, PyInstaller does the work of
+identifying your dependencies. The `binaries` field is a list of tuples in the
+format `(filename, full_path, type)`. These fields represent all of the shared
+library files that PyInstaller will put in your resulting executable. We may
+simply filter out the libraries we want externalized from this list. The result
+might look something like this:
 
 ```python
 # -*- mode: python -*-
@@ -297,15 +316,7 @@ analysis = Analysis(['./my_main_file.py'],
     win_private_assemblies=False,
     cipher=None)
 
-gpl_libraries = ["libgcrypt.so", "libsystemd.so"]
 lgpl_libraries = ["libavcodec", "libavformat"]
-
-def is_gpl(filename):
-    for gpl_lib in gpl_libraries:
-        if gpl_lib in filename:
-            return True
-
-    return False
 
 def is_lgpl(filename):
     for lgpl_lib in lgpl_libraries:
@@ -318,9 +329,7 @@ filtered_binaries = []
 for binary in analysis.binaries:
     filename, path, type_ = binary
 
-    if is_gpl(filename):
-        print("Excluding library:", filename)
-    elif is_lgpl(filename):
+    if is_lgpl(filename):
         print("Externalizing library:", filename)
         copyfile(path, Path("lib", filename))
     else:
@@ -341,16 +350,17 @@ elf = EXE(pyz,
     console=True)
 ```
 
-Much like last time, we have a list of known LGPL dependencies and we attempt
-to match them against each of our discovered library files. If there is a
-match, we copy the file to a `lib` directory and exclude it from the bundling
-process.
+In the above example, we keep a list of known LGPL libraries and filter out the
+`binaries` field of any libraries that look like them. When we find a match, we
+copy the file to a `lib` directory and exclude it from the bundling process.
+The resulting filtered list of non-LGPL libraries is fed into the `EXE`
+constructor.
 
 Now that these library files are no longer managed by PyInstaller, we need to
 make sure the linker can find these library files at runtime. There are a few
 ways to accomplish this, but we opted to deploy a script alongside the
 executable that modifies the `LD_LIBRARY_PATH` variable to include the `lib`
-directory.
+directory we created.
 
 ```bash
 #!/usr/bin/env bash
@@ -491,7 +501,7 @@ gets run. Then, we import `python-vlc` and remove the meta path finder from
 One important thing to know is that this code _must be run before your LGPL
 dependency is imported anywhere else_. This is because modules in Python are
 singletons. No matter how many times a module is imported in a project, the
-initialization of the model only happens once and we need to make sure it
+initialization of the module only happens once and we need to make sure it
 happens while our custom meta path loader is active. The benefit to this is
 that your LGPL dependency can be imported normally everywhere else in your
 project after this initial import.
