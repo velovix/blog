@@ -8,9 +8,10 @@ languageCode = "en-us"
 staticDir = ["static_files"]
 
 title = "velovix"
-theme = "natrium"
-pygmentsCodefences = true
-pygmentsStyle = "native"
+theme = "ezhil"
+pygmentsstyle = "vs"
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
 
 [author]
 	name = "Tyler Compton"
