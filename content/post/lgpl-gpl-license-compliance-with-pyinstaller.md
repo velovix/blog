@@ -447,7 +447,7 @@ implement is `find_spec`. With this in mind, let's create a meta path finder
 that can import a module given its name and the path to its implementation.
 
 ```python
-class LGPLFinder:
+class LGPLFinder(MetaPathFinder):
     def __init__(self, module_name, custom_location):
         self.module_name = module_name
         self.custom_location = custom_location
